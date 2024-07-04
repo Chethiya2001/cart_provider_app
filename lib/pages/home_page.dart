@@ -3,6 +3,7 @@ import 'package:cart_provider_app/models/product_model.dart';
 import 'package:cart_provider_app/pages/cart_page.dart';
 import 'package:cart_provider_app/pages/fav_page.dart';
 import 'package:cart_provider_app/providers/card_provider.dart';
+import 'package:cart_provider_app/providers/favorite_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -53,15 +54,21 @@ class HomePage extends StatelessWidget {
         itemBuilder: (context, index) {
           final Product product = products[index];
           return Card(
-            child: Consumer(
+            child: Consumer2<CartProvider, FavoriteProvider>(
               builder: (BuildContext context, CartProvider cartProvider,
-                  Widget? child) {
+                  FavoriteProvider favoriteProvider, Widget? child) {
                 return ListTile(
                   title: Row(
                     children: [
                       Text(product.title),
                       const SizedBox(width: 50),
-                      const Text('0'),
+                      Text(
+                        cartProvider.items.containsKey(product.id)
+                            ? cartProvider.items[product.id]!.quantity
+                                .toString()
+                            : '0',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                   subtitle: Text("\$${product.price.toString()}"),
@@ -69,17 +76,43 @@ class HomePage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.favorite_border_outlined),
-                        onPressed: () {},
+                        icon: Icon(
+                          favoriteProvider.isFavorite(product.id)
+                              ? Icons.favorite
+                              : Icons.favorite_border_outlined,
+                          color: favoriteProvider.isFavorite(product.id)
+                              ? Colors.redAccent
+                              : Colors.grey,
+                        ),
+                        onPressed: () {
+                          favoriteProvider.toggleFavorite(product.id);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(favoriteProvider
+                                      .isFavorite(product.id)
+                                  ? '${product.title} added to Favorite'
+                                  : '${product.title} Removed from Favorite'),
+                              duration: const Duration(seconds: 1)));
+                        },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.shopping_cart_outlined),
+                        icon: Icon(
+                          Icons.shopping_cart_outlined,
+                          color: cartProvider.items.containsKey(product.id)
+                              ? Colors.deepPurpleAccent
+                              : Colors.grey,
+                        ),
                         onPressed: () {
                           cartProvider.addItem(
                             product.id,
                             product.price,
                             product.title,
                           );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              '${product.title} added to cart',
+                            ),
+                            duration: const Duration(seconds: 1),
+                          ));
                         },
                       ),
                     ],

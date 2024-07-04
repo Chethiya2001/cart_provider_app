@@ -22,36 +22,53 @@ class CartPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final CartItems item =
                         cartProvider.items.values.toList()[index];
-                    return Container(
-                      padding: const EdgeInsets.all(5),
-                      color: const Color.fromARGB(255, 254, 240, 189),
-                      child: ListTile(
-                        title: Text(item.tittle),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Price: \$${item.price}'),
-                            Text('Quantity: ${item.quantity}'),
-                            Text("Total: \$${item.price * item.quantity}"),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                cartProvider.removeSingleItem(item.id);
-                              },
-                              icon: const Icon(Icons.remove),
-                            ),
-                            const SizedBox(width: 10),
-                            IconButton(
-                              onPressed: () {
-                                cartProvider.removeItem(item.id);
-                              },
-                              icon: const Icon(Icons.remove_shopping_cart),
-                            ),
-                          ],
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        color: const Color.fromARGB(255, 254, 240, 189),
+                        child: ListTile(
+                          title: Text(item.tittle),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Price: \$${item.price}'),
+                              Text('Quantity: ${item.quantity}'),
+                              Text("Total: \$${item.price * item.quantity}"),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  cartProvider.removeSingleItem(item.id);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      '${item.tittle} removed.',
+                                    ),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                },
+                                icon: const Icon(Icons.remove),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                onPressed: () {
+                                  cartProvider.removeItem(item.id);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      '${item.tittle} Removed From the cart',
+                                    ),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                },
+                                icon: const Icon(Icons.remove_shopping_cart),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

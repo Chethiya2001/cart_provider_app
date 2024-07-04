@@ -54,7 +54,7 @@ class CartProvider extends ChangeNotifier {
           id: existingCrtItem.id,
           tittle: existingCrtItem.tittle,
           price: existingCrtItem.price,
-          quantity: existingCrtItem.quantity + 1,
+          quantity: existingCrtItem.quantity - 1,
         ),
       );
     }else {
