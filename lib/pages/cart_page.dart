@@ -10,7 +10,7 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart Page'),
+        title: const Text('Cart Page'),
       ),
       body: Consumer<CartProvider>(
         builder: (context, cartProvider, child) {
@@ -73,6 +73,29 @@ class CartPage extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(08),
+                child: Text(
+                  'Total: \$${cartProvider.totalAmount.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    cartProvider.clearly();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Cart Cleared'),
+                      duration: Duration(seconds: 1),
+                    ));
+                  },
+                  child: const Text('Clear Cart'),
                 ),
               ),
             ],

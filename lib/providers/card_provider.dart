@@ -57,9 +57,26 @@ class CartProvider extends ChangeNotifier {
           quantity: existingCrtItem.quantity - 1,
         ),
       );
-    }else {
+    } else {
       _items.remove(productId);
     }
     notifyListeners();
+  }
+
+  //clear all
+  void clearly() {
+    _items.clear();
+    notifyListeners();
+  }
+  //calculate total amount
+
+  double get totalAmount {
+    var total = 0.0;
+    _items.forEach(
+      (key, value) {
+        total += value.price * value.quantity;
+      },
+    );
+    return total;
   }
 }
